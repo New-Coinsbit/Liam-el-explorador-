@@ -41,15 +41,15 @@ Se implementó un cargador de personajes GLB con animaciones idle/walk/greet/exp
 
 ## Despliegue y accesos pendientes
 
-`render.yaml` define solo un servicio NUEVO `liam-explorador-mobile` con este repositorio. No apunta a los servicios antiguos con nombres parecidos.
+La versión 0.3.1 está publicada en https://liam-explorador-mobile.onrender.com desde el 8 de octubre de 2026. El código está en `main` del repositorio indicado arriba. GitHub ya permite publicar; ese bloqueo quedó resuelto. El servicio gratuito `liam-explorador-mobile` es independiente de los servicios antiguos con nombres parecidos.
 
-1. Habilitar este repositorio en la integración GitHub y permitir escritura. La operación previa fue rechazada con 403 `Resource not accessible by integration`; la revisión del 8 de octubre de 2026 no lo encontró habilitado en la instalación. El repositorio remoto sigue vacío.
-2. Publicar el código y seleccionar la rama de esta entrega o integrarla en `main` antes de desplegar.
-3. Proveer PostgreSQL exclusivo de Liam. No hay una base dedicada existente; Render rechazó anteriormente otra base gratuita por el límite de una activa. No se reutiliza ni se modifica ninguna base de otro proyecto y no se contrató una base de pago.
-4. Configurar `DATABASE_URL`, `APP_ORIGIN`, `ADMIN_KEY`; SMTP para correo, `OPENAI_API_KEY` para IA y VAPID para notificaciones cuando corresponda. Ninguna credencial se incluye en el frontend.
-5. Verificar cuentas de prueba en el servidor HTTPS y un dispositivo físico antes de habilitar familias reales.
+La publicación actual permite explorar el avance y muestra un aviso de registro no disponible. La comprobación HTTPS de `/`, `/api/health` y `/api/config` devuelve 200; la salud declara `database: false`. Esto confirma que el servidor funciona, no que las cuentas estén habilitadas.
 
-Los componentes con correo, IA y push están programados pero no activados con proveedores reales. Las pruebas usan correo y respuestas IA de prueba sin envíos externos. No se declara publicado lo que solo está implementado localmente.
+1. Proveer PostgreSQL exclusivo de Liam. No hay una base dedicada existente; Render rechazó anteriormente otra base gratuita por el límite de una activa. No se reutiliza ni se modifica ninguna base de otro proyecto y no se contrató una base de pago.
+2. Configurar `DATABASE_URL`, `APP_ORIGIN`, `ADMIN_KEY`; correo, `OPENAI_API_KEY` para IA y VAPID para notificaciones cuando corresponda. Ninguna credencial se incluye en el frontend.
+3. Verificar cuentas de prueba en el servidor HTTPS y un dispositivo físico antes de habilitar familias reales.
+
+`render.yaml` conserva la configuración prevista para activar esos servicios. La instalación de dependencias incluye las herramientas de compilación incluso con `NODE_ENV=production`. Los componentes con correo, IA y push están programados pero no activados con proveedores reales. Las pruebas previas usan correo y respuestas IA de prueba sin envíos externos. El despliegue web no equivale a un APK ni al escenario 3D final.
 
 ## Pruebas
 

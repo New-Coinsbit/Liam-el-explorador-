@@ -1,5 +1,7 @@
 # Auditoría integral · 0.3.1 · 8 de octubre de 2026
 
+**Actualización posterior de publicación:** GitHub quedó habilitado y esta versión se publicó en `main` y en https://liam-explorador-mobile.onrender.com el 8 de octubre de 2026. La comprobación HTTPS devolvió 200 en la portada, salud y configuración. Continúa pendiente PostgreSQL dedicado; registro y persistencia permanecen deshabilitados. Los bloqueos de GitHub descritos abajo son el estado histórico al terminar la auditoría local, ya resuelto. Consulte el README para el estado actual.
+
 Repositorio exclusivo: `New-Coinsbit/Liam-el-explorador-`. Rama de trabajo: `fix/mobile-complete-audit`. El código está guardado localmente; la publicación remota sigue bloqueada. Esta auditoría no certifica un cumplimiento del 100 % ni sustituye pruebas en teléfonos físicos.
 
 ## Correcciones de esta revisión
