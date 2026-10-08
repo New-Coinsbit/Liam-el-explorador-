@@ -1,0 +1,6 @@
+{
+  "status": "awaiting-approved-models",
+  "reference": "/assets/adventure-approved.webp",
+  "characters": {},
+  "requiredAnimations": ["idle", "walk", "greet", "explain", "clap"]
+}

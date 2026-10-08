@@ -1,0 +1,101 @@
+const assert = require('node:assert/strict');
+const path = require('node:path');
+const fs = require('node:fs');
+const {chromium} = require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES ? process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '/playwright' : 'playwright');
+const root=path.resolve(__dirname,'..'), preview=process.argv[2]||path.join(root,'test-results/liam-preview.html');
+(async()=>{
+ fs.mkdirSync(path.join(root,'test-results'),{recursive:true});
+ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+ const page=await browser.newPage({viewport:{width:393,height:852},isMobile:true,hasTouch:true,reducedMotion:'no-preference'});
+ await page.addInitScript(()=>{
+  window.qaAudio=[];const Native=window.AudioContext;
+  window.AudioContext=class extends Native{constructor(...args){super(...args);window.qaAudio.push(this)}createGain(){const gain=super.createGain();this.qaMaster??=gain;return gain;}};
+ });
+ const errors=[],remote=[];page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>{if(/^https?:/.test(request.url()))remote.push(request.url())});
+ const waitScene=async(selector='#adventure-map')=>{await page.waitForSelector(selector);await page.waitForFunction(selector=>document.querySelector(selector)?.dataset.assetsReady==='true',selector,{timeout:40000});};
+ await page.goto(require('node:url').pathToFileURL(preview).href);
+ await page.waitForFunction(()=>document.querySelector('.welcome-art')?.complete);
+ assert.equal(await page.locator('.welcome canvas,.welcome-logo').count(),0,'Cover rebuilt with cropped layers');
+ assert.equal(await page.locator('.welcome-art').evaluate(img=>img.naturalWidth),933);
+ const cover=await page.locator('.welcome-art').boundingBox();
+ assert.ok(Math.abs(cover.width/cover.height-933/1686)<.001,'Cover is stretched');
+ await page.getByRole('button',{name:'Activar sonido de ambiente',exact:true}).click();
+ await page.waitForFunction(()=>qaAudio[0]?.state==='running'&&qaAudio[0].qaMaster.gain.value>.02);
+ await page.getByRole('button',{name:'Silenciar ambiente',exact:true}).click();
+ await page.waitForFunction(()=>qaAudio[0].qaMaster.gain.value<.003);
+ assert.equal(await page.evaluate(()=>localStorage.getItem('liam-sound')),'off');
+ await page.screenshot({path:path.join(root,'test-results/20-welcome-animated.png')});
+ await page.getByRole('button',{name:'CONTINUAR',exact:true}).click();
+ await page.waitForSelector('#register-form');
+ assert.equal(await page.locator('.bottom-nav').count(),0);
+ assert.ok((await page.locator('.page-header').boundingBox()).height<=48);
+ assert.ok((await page.locator('[name=firstName]').boundingBox()).height<=42);
+ await page.screenshot({path:path.join(root,'test-results/21-register-compact.png')});
+ await page.getByRole('button',{name:'Volver',exact:true}).click();
+ await page.getByRole('button',{name:'Ver avance de la aplicación'}).click();await waitScene();
+ assert.equal(await page.locator('.bottom-nav button').count(),4);
+ assert.ok((await page.locator('.bottom-nav').boundingBox()).height<=60);
+ assert.equal(await page.locator('#adventure-map canvas').count(),0);
+ assert.equal(await page.locator('.adventure-art').evaluate(i=>i.naturalWidth),853);
+ await page.screenshot({path:path.join(root,'test-results/22-approved-adventure.png')});
+ await page.locator('.trail-node[data-level="2"]').click();
+ assert.equal(new URL(page.url()).hash,'#adventure');
+ await page.getByRole('button',{name:'Abrir el prototipo 360 grados',exact:true}).click();await waitScene('#forest');
+ assert.equal(await page.locator('.bottom-nav').count(),0);
+ await page.getByRole('button',{name:'Pausar animaciones',exact:true}).click();
+ await page.waitForTimeout(160);
+ const frozen=await page.locator('canvas').screenshot();await page.waitForTimeout(500);
+ assert.ok(frozen.equals(await page.locator('canvas').screenshot()),'Paused scene continues moving');
+ await page.getByRole('button',{name:'Activar animaciones',exact:true}).click();
+ await page.waitForTimeout(1000);
+ assert.ok(!frozen.equals(await page.locator('canvas').screenshot()),'Environment does not animate');
+ for(let i=0;i<5;i++){await page.mouse.move(285,570);await page.mouse.down();await page.mouse.move(95,570,{steps:8});await page.mouse.up();}
+ await page.waitForFunction(()=>Number(document.querySelector('#forest').dataset.cameraYaw)>Math.PI*2);
+ await page.getByRole('button',{name:'Volver al inicio de la pista',exact:true}).click();
+ await page.waitForFunction(()=>document.querySelector('#forest').dataset.cameraYaw==='0.00');
+ const start=Number(await page.locator('#forest').getAttribute('data-progress'));
+ const forward=await page.getByRole('button',{name:'Avanzar por la pista',exact:true}).boundingBox();
+ await page.mouse.move(forward.x+forward.width/2,forward.y+forward.height/2);await page.mouse.down();await page.waitForTimeout(650);await page.mouse.up();
+ assert.ok(Number(await page.locator('#forest').getAttribute('data-progress'))>start+.005,'Walking does not move along trail');
+ await page.getByRole('button',{name:'Volver al inicio de la pista',exact:true}).click();
+ await page.getByRole('button',{name:'Volver',exact:true}).click();await waitScene();
+ await page.locator('.trail-node[data-level="1"]').click();
+ await page.waitForSelector('.coach-intro');
+ assert.equal(new URL(page.url()).hash,'#briefing');
+ assert.equal(await page.locator('.bottom-nav').count(),0);
+ assert.equal(await page.locator('.coach-intro .owl').count(),1);
+ assert.equal(await page.locator('[data-answer]').count(),0);
+ await page.screenshot({path:path.join(root,'test-results/23-owl-briefing.png')});
+ await page.getByRole('button',{name:'¡ESTOY LISTO!'}).click();
+ assert.equal(await page.locator('.bottom-nav').count(),0);
+ for(const answer of [0,1,2]){await page.locator(`[data-answer="${answer}"]`).click();await page.locator('[data-action=next-question]').click();}
+ await page.waitForSelector('.coach-feedback .fox');
+ assert.equal(await page.locator('.bottom-nav').count(),0);
+ assert.ok(await page.getByText('Estrellas acumuladas: 3').count());
+ await page.screenshot({path:path.join(root,'test-results/24-fox-feedback.png')});
+ await page.getByRole('button',{name:'VOLVER A LA PISTA'}).click();await waitScene();
+ assert.equal(await page.locator('.scene-score strong').textContent(),'3');
+ await page.locator('.trail-node[data-level="2"]').click();await page.waitForSelector('.coach-intro');
+ assert.ok((await page.locator('.coach-message').textContent()).includes('matemáticas'));
+ await page.getByRole('button',{name:'¡ESTOY LISTO!'}).click();
+ for(const answer of [1,2,1]){await page.locator(`[data-answer="${answer}"]`).click();await page.locator('[data-action=next-question]').click();}
+ await page.waitForSelector('.coach-feedback .fox');
+ assert.ok(await page.getByText('Estrellas acumuladas: 5').count());
+ await page.getByRole('button',{name:'VOLVER A LA PISTA'}).click();await waitScene();
+ assert.ok(await page.getByText('¡Completaste los retos disponibles!').count());
+ assert.equal(await page.locator('.scene-start [data-activity]').count(),0,'Finished course invents a new activity');
+ for(const width of [320,393,480]){
+  await page.setViewportSize({width,height:740});
+  for(const route of ['activities','community','profile','adventure']){
+   await page.locator(`.bottom-nav [data-nav="${route}"]`).click();
+   if(route==='adventure')await waitScene();else await page.waitForFunction(title=>document.querySelector('.page-header h1')?.textContent===title,{activities:'Tus retos',community:'Comunidad',profile:'Mi perfil'}[route]);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`${route} overflows at ${width}`);
+   assert.equal(await page.locator('.bottom-nav').count(),1);
+   if(route!=='adventure')assert.ok((await page.locator('.page-header').boundingBox()).height<=48);
+  }
+ }
+ await page.locator('.bottom-nav [data-nav=profile]').click();await page.getByRole('button',{name:'Cerrar sesión',exact:true}).click();await page.getByRole('button',{name:'Ver avance de la aplicación'}).click();await waitScene();assert.equal(await page.locator('.scene-score strong').textContent(),'0');assert.equal(await page.locator('.scene-mission h2').textContent(),'Explora el clima');
+ assert.deepEqual(errors,[]);assert.deepEqual(remote,[],'Standalone preview makes external requests');
+ await browser.close();
+ console.log('PASS: approved cover and valley map, environment pause, audio on/off, 360 rotation, trail movement, level locks/unlocks, owl briefing, 3/2 stars, fox feedback, retracting navigation, compact UI at 320/393/480px; fully offline, no JS errors.');
+})().catch(error=>{console.error(error);process.exit(1)});

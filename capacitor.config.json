@@ -1,0 +1,9 @@
+{
+  "appId": "com.newcoinsbit.liamelexplorador",
+  "appName": "Liam El Explorador",
+  "webDir": "mobile-dist",
+  "backgroundColor": "#123a2b",
+  "loggingBehavior": "debug",
+  "android": {"allowMixedContent": false, "webContentsDebuggingEnabled": false},
+  "plugins": {"CapacitorHttp": {"enabled": true}, "CapacitorCookies": {"enabled": true}}
+}

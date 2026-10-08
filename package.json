@@ -1,0 +1,44 @@
+{
+  "name": "liam-mobile",
+  "version": "0.3.1",
+  "description": "Proyecto independiente iniciado desde cero en `New-Coinsbit/Liam-el-explorador-`.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "build": "node scripts/build.js",
+    "test": "node --test tests/*.test.js",
+    "android:prepare": "node scripts/prepare-android.js",
+    "preview:export": "node scripts/export-preview.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/New-Coinsbit/Liam-el-explorador-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/New-Coinsbit/Liam-el-explorador-/issues"
+  },
+  "homepage": "https://github.com/New-Coinsbit/Liam-el-explorador-#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "express": "^5.2.1",
+    "nodemailer": "^10.0.16",
+    "pg": "^8.23.1",
+    "three": "^0.183.2",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
+    "@electric-sql/pglite": "^0.5.8",
+    "esbuild": "^0.28.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  }
+}

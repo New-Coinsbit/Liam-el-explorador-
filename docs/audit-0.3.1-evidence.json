@@ -1,0 +1,357 @@
+{
+  "screens": [
+    {
+      "route": "welcome",
+      "width": 320,
+      "overflow": false,
+      "header": null
+    },
+    {
+      "route": "register",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "login",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "recovery",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "reset-password",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "verify-email",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "adventure",
+      "width": 320,
+      "overflow": false,
+      "header": null
+    },
+    {
+      "route": "activities",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "profile",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "parents",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "family",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "progress",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "contacts",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "community",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "notifications",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "install",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "reinforce",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "teacher",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "editor",
+      "width": 320,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "welcome",
+      "width": 393,
+      "overflow": false,
+      "header": null
+    },
+    {
+      "route": "register",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "login",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "recovery",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "reset-password",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "verify-email",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "adventure",
+      "width": 393,
+      "overflow": false,
+      "header": null
+    },
+    {
+      "route": "activities",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "profile",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "parents",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "family",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "progress",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "contacts",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "community",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "notifications",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "install",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "reinforce",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "teacher",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "editor",
+      "width": 393,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "welcome",
+      "width": 480,
+      "overflow": false,
+      "header": null
+    },
+    {
+      "route": "register",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "login",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "recovery",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "reset-password",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "verify-email",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "adventure",
+      "width": 480,
+      "overflow": false,
+      "header": null
+    },
+    {
+      "route": "activities",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "profile",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "parents",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "family",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "progress",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "contacts",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "community",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "notifications",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "install",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "reinforce",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "teacher",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    },
+    {
+      "route": "editor",
+      "width": 480,
+      "overflow": false,
+      "header": 44
+    }
+  ],
+  "checks": [
+    "family back",
+    "stale response",
+    "camera normalization",
+    "corrupt photo",
+    "reinforcement fields preserved",
+    "expired adult PIN",
+    "expired session",
+    "native preview copy"
+  ],
+  "pageErrors": []
+}
