@@ -8,11 +8,12 @@ import {readFile} from 'node:fs/promises';
 import {createMailer} from './mail.js';
 import {accountRoutes} from './accounts.js';
 import {learningRoutes} from './learning.js';
-import {notifications} from './notifications.js';
+import {notifications,pushConfig} from './notifications.js';
 import {communityRoutes} from './community.js';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-export async function createApp({sendMail}={}){
+export async function createApp({sendMail,pushSender}={}){
+ const pushSettings=pushConfig();
  const mailer=createMailer(sendMail);const {version}=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
  const db=await openDatabase();const app=express();app.set('trust proxy',1);app.disable('x-powered-by');
  app.use((req,res,next)=>{res.set({'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','X-Frame-Options':'DENY','Permissions-Policy':'camera=(self), microphone=(), geolocation=()','Content-Security-Policy':"default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; font-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"});if(req.path.startsWith('/api/'))res.set('Cache-Control','no-store');next();});
@@ -26,7 +27,7 @@ export async function createApp({sendMail}={}){
  const row=async(q,p)=>(await db.query(q,p)).rows[0];
  const many=async(q,p)=>(await db.query(q,p)).rows;
  app.get('/api/health',async(req,res)=>{if(db)await db.query('SELECT 1');res.json({ok:true,database:!!db,version});});
- app.get('/api/config',(req,res)=>res.json({database:!!db,ai:!!process.env.OPENAI_API_KEY,grades:Array.from({length:12},(_,i)=>i),subjects:['Matemáticas','Español','Inglés','Ciencias Naturales','Ciencias Sociales','Tecnología','Arte'],email:mailer.enabled,release:version,worldStatus:'foundation'}));
+ app.get('/api/config',(req,res)=>res.json({database:!!db,ai:!!process.env.OPENAI_API_KEY,grades:Array.from({length:12},(_,i)=>i),subjects:['Matemáticas','Español','Inglés','Ciencias Naturales','Ciencias Sociales','Tecnología','Arte'],email:mailer.enabled,push:pushSettings.enabled,release:version,worldStatus:'foundation'}));
  app.use('/api',(req,res,next)=>db?next():res.status(503).json({error:'El registro estará disponible cuando se active la base de datos de Liam.'}));
  async function profile(user,session){
   const totals=await row('SELECT COALESCE(SUM(stars),0)::int AS stars FROM attempts WHERE user_id=$1',[user.id]);
@@ -73,7 +74,7 @@ export async function createApp({sendMail}={}){
  const context={app,db,row,many,auth,adult,teacher,limit,fail,profile,sessionFor,mailer};
  accountRoutes(context);
  const learning=learningRoutes(context);
- const sendPush=notifications(context);
+ const sendPush=notifications({...context,pushSettings,pushSender});
  communityRoutes({...context,...learning,sendPush});
  app.get('/api/groups',auth,async(req,res)=>res.json(await many('SELECT c.id,c.name,c.owner_id=$1 AS owned,CASE WHEN c.owner_id=$1 THEN c.invite_code ELSE NULL END AS invite_code FROM classrooms c JOIN memberships m ON m.group_id=c.id WHERE m.user_id=$1',[req.user.id])));
  app.post('/api/groups',auth,teacher,async(req,res)=>{const name=clean(req.body.name,80);if(name.length<3)fail(400,'Escribe el nombre del grupo.');const id=randomUUID(),code=randomBytes(6).toString('hex').toUpperCase();const grade=Number(req.body.grade??0);if(!Number.isInteger(grade)||grade<0||grade>11)fail(400,'Selecciona un grado válido.');await db.transaction(async tx=>{await tx.query('INSERT INTO classrooms(id,owner_id,name,invite_code,school_id,grade) VALUES($1,$2,$3,$4,$5,$6)',[id,req.user.id,name,code,req.user.school_id,grade]);await tx.query('INSERT INTO memberships VALUES($1,$2)',[id,req.user.id]);});res.status(201).json({id,name,invite_code:code,owned:true});});

@@ -1,4 +1,4 @@
-# Salida móvil 0.3.1
+# Salida móvil 0.3.2
 
 ## PWA
 
@@ -6,7 +6,7 @@ El manifest incluye iconos 192/512, orientación vertical y presentación standa
 
 Un reto previamente abierto se puede terminar si se pierde internet. La respuesta pendiente se conserva en `sessionStorage`, bajo el ID del alumno, y se reenvía con un ID de intento estable al recuperar conexión. Cambiar de usuario no envía respuestas al perfil equivocado. Cerrar la pestaña puede perder respuestas aún pendientes: la pantalla informa esta limitación. Chat, IA, registro y carga de nuevas actividades necesitan conexión.
 
-Web Push requiere VAPID y soporte de navegador. El adulto autoriza desde «En tu teléfono». La suscripción está vinculada a una sesión activa y a su usuario. No contiene nombres de niños, texto de mensajes ni calificaciones en la notificación del sistema. El servidor acepta exclusivamente proveedores push conocidos y URL HTTPS. No sustituye las notificaciones nativas de Firebase en Android WebView.
+Web Push usa VAPID y requiere soporte de navegador. La pantalla muestra si está activo en este dispositivo, si falta permiso, si está bloqueado o si el servicio no está disponible. Permite activar, desactivar, volver a comprobar y enviar una prueba al mismo dispositivo. La petición de permiso ocurre por un clic del adulto, nunca al abrir la aplicación. El adulto autoriza desde «En tu teléfono». La suscripción está vinculada a una sesión activa y a su usuario. No contiene nombres de niños, texto de mensajes ni calificaciones en la notificación del sistema. El servidor acepta exclusivamente proveedores push conocidos y URL HTTPS. No sustituye las notificaciones nativas de Firebase en Android WebView.
 
 ## Proyecto Android
 
@@ -15,7 +15,7 @@ El directorio `android/` se generó con Capacitor 8.5.3. Se mantienen icono prop
 ```sh
 npm ci
 npm run build
-LIAM_API_ORIGIN=https://URL-REAL-DE-LIAM npm run android:prepare
+LIAM_API_ORIGIN=https://liam-explorador-mobile.onrender.com npm run android:prepare
 npx cap open android
 ```
 
@@ -31,6 +31,6 @@ Esta variante dice «vista previa» y no activa cuentas. No usarla como una vers
 
 La revisión 0.3.1 obtuvo y verificó Gradle 8.14.3, JDK 21 y plataforma SDK 36 con herramientas 36 en un directorio aislado. Gradle ya arrancó y configuró los proyectos. La compilación se detuvo al requerir Android SDK Build-Tools 35.0.0 con una licencia no aceptada. No se aceptó el acuerdo, ni se generó un APK/AAB. El responsable debe revisar/aceptar la licencia e instalar el componente con Android Studio SDK Manager antes de ejecutar `./gradlew assembleDebug`.
 
-La cámara/galería utiliza el selector de archivos del sistema; su funcionamiento, cookies de sesión y permisos deben probarse en Android físico. Web Push se verifica aparte en la PWA; no se implementó Firebase nativo. La versión nativa de prueba informa esta limitación y no ofrece un botón de instalación del navegador cuando ya está instalada. Falta una clave propia de firma para distribución y una URL publicada para una versión con datos reales.
+La cámara/galería utiliza el selector de archivos del sistema; su funcionamiento, cookies de sesión y permisos deben probarse en Android físico. Web Push se verifica aparte en la PWA; no se implementó Firebase nativo. La versión nativa de prueba informa esta limitación y no ofrece un botón de instalación del navegador cuando ya está instalada. El proyecto 0.3.2 ya se sincronizó con https://liam-explorador-mobile.onrender.com. Falta aceptar la licencia indicada, compilar, probar en un teléfono físico y aportar una clave propia de firma para distribución.
 
 La versión iOS no está generada.

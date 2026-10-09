@@ -27,6 +27,10 @@ services:
         sync: false
       - key: OPENAI_MODEL
         value: gpt-4.1-mini
+      - key: MAIL_PROVIDER
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
@@ -42,4 +46,6 @@ services:
       - key: VAPID_PRIVATE_KEY
         sync: false
       - key: VAPID_SUBJECT
+        sync: false
+      - key: APP_NATIVE_ORIGIN
         sync: false

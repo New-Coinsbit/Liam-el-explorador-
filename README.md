@@ -1,6 +1,6 @@
 # Liam El Explorador · aplicación móvil
 
-Versión 0.3.1. Proyecto aislado: **New-Coinsbit/Liam-el-explorador-** (guion final). Conserva la portada original, el valle aprobado y las barras compactas. No modifica ni depende de otros repositorios o servicios del usuario.
+Versión 0.3.2. Proyecto aislado: **New-Coinsbit/Liam-el-explorador-** (guion final). Conserva la portada original, el valle aprobado y las barras compactas. No modifica ni depende de otros repositorios o servicios del usuario.
 
 ## Ejecutar
 
@@ -19,7 +19,7 @@ Abrir http://localhost:3000. PGlite conserva los datos de desarrollo en `.local-
 
 - Registro de alumnos/profesores, colegios, grado, cumpleaños, edad coherente, asignaturas, ID único y 24 avatares. Contraseñas scrypt, sesiones HttpOnly, protección de origen y límites de intentos.
 - Cuenta familiar independiente, varios hijos, acceso del alumno por ID, cambio de contraseña del niño, entrada al perfil infantil y retorno protegido con PIN. Al convertir una cuenta anterior, el adulto elige una contraseña exclusiva y conserva el progreso del niño.
-- Confirmación de correo y recuperación de contraseña/PIN mediante SMTP. Enlaces de un uso y 30 minutos; recuperar el acceso revoca también las sesiones de los hijos vinculados. Requiere activar SMTP y `APP_ORIGIN`.
+- Confirmación de correo y recuperación de contraseña/PIN mediante HTTPS (Resend) o SMTP. Enlaces de un uso y 30 minutos; recuperar el acceso revoca también las sesiones de los hijos vinculados. Requiere configurar un proveedor, un remitente autorizado y `APP_ORIGIN`.
 - Administración `/#admin`: aprobar colegios, autorizar profesores con correo confirmado y colegio aprobado, revisar reportes y ocultar mensajes. Clave `ADMIN_KEY`, cookie independiente y sesiones de 30 minutos.
 - Bloqueos de niveles en el servidor, lista y mapa. Dos estrellas permiten avanzar, tres son excelente. Repetir conserva el mejor resultado para sumar estrellas.
 - Historial de cada intento, resultados por materia, explicaciones, pendientes e informes familiares. Las respuestas reenviadas con el mismo ID no duplican intentos. La vista muestra los últimos 100; la base conserva el historial completo.
@@ -28,7 +28,7 @@ Abrir http://localhost:3000. PGlite conserva los datos de desarrollo en `.local-
 - Refuerzo fotográfico con objetivo: repasar, preparar evaluación o reforzar errores recientes. Las fotos nuevas se envían para análisis y no se conservan en la tabla de actividades. Los borradores se pueden editar antes de publicarse; las preguntas publicadas permanecen estables para proteger el historial.
 - Grupos con colegio y grado, profesores autorizados, códigos de ingreso familiar, actividades compartidas e informes limitados al propio grupo.
 - Contactos por ID dentro de una clase compartida, aprobación de ambos adultos, mensajes privados, reacciones, bloqueo, reportes y retos compartidos desbloqueados para ambos participantes.
-- Novedades dentro de la app; integración Web Push con autorización del adulto y mensajes genéricos sin nombres ni contenido escolar en la pantalla bloqueada. Requiere claves VAPID.
+- Novedades dentro de la app; integración Web Push con autorización del adulto y mensajes genéricos sin nombres ni contenido escolar en la pantalla bloqueada. Incluye estado por teléfono, prueba, desactivación y control de permisos; requiere claves VAPID.
 - PWA instalable, caché de recursos públicos y cola de intentos en la pestaña al perder conexión. Nunca se cachean respuestas API, chats ni fotos privadas. Solo sincroniza con el mismo alumno; no es una biblioteca completa para estudiar sin internet.
 - Proyecto Android Capacitor y preparación de recursos. La compilación avanza con JDK 21 y Gradle; se detiene en la licencia pendiente de Android SDK Build-Tools 35. No se ha generado ni firmado un APK. Véase `docs/MOBILE.md`.
 - Búho antes del reto, zorro al finalizar, confeti, sonido opcional de ambiente y navegación inferior común de 56 px, oculta en pantallas secundarias.
@@ -47,17 +47,18 @@ El registro y la persistencia quedaron activados el 8 de octubre de 2026, despu�
 
 Se verificaron en el servidor HTTPS el registro con datos ficticios, ID único, estrellas, desbloqueo de nivel, reintento sin duplicación, PIN, premio, avatar y conservación del progreso tras cerrar e iniciar sesión. El formulario público ya permite crear cuentas. Los colegios se incorporan mediante solicitud y aprobación; no se inventó un catálogo de instituciones reales. Véase `docs/PRODUCTION-ACTIVATION.md`.
 
-1. Activar correo, `OPENAI_API_KEY` para IA y VAPID para notificaciones cuando corresponda. El servicio web gratuito requiere revisar un transporte de correo compatible antes de activar SMTP.
+1. Configurar `MAIL_PROVIDER=resend`, `RESEND_API_KEY` y un `MAIL_FROM` verificado para activar correo por HTTPS. Configurar `OPENAI_API_KEY` para activar el refuerzo fotográfico. Las claves permanecen en Render. Véase `docs/RELEASE-0.3.2.md`.
 2. Incorporar los colegios reales y verificar docentes. La autorización de un profesor requiere confirmar su correo, por lo que ese flujo sigue pendiente del proveedor de correo.
 3. Verificar la experiencia en teléfonos físicos y completar los recursos 3D y la distribución móvil.
 
-`render.yaml` conserva la configuración prevista para activar esos servicios. La instalación de dependencias incluye las herramientas de compilación incluso con `NODE_ENV=production`. Los componentes con correo, IA y push están programados pero no activados con proveedores reales. Las pruebas previas usan correo y respuestas IA de prueba sin envíos externos. El despliegue web no equivale a un APK ni al escenario 3D final.
+`render.yaml` conserva la configuración prevista para activar esos servicios. La instalación de dependencias incluye las herramientas de compilación incluso con `NODE_ENV=production`. La revisión 0.3.2 añade el transporte de correo HTTPS y mejores controles de IA y Web Push. Correo e IA continúan pendientes de credenciales; sus pruebas usan respuestas simuladas. Las pruebas previas usan correo y respuestas IA de prueba sin envíos externos. El despliegue web no equivale a un APK ni al escenario 3D final.
 
 ## Pruebas
 
 ```sh
 npm test
 node scripts/export-preview.js test-results/liam-preview.html
+node tests/ui-mobile.cjs
 node tests/ui-platform.cjs
 node tests/ui-audit.cjs
 node tests/ui-selectors.cjs
@@ -65,7 +66,7 @@ node tests/ui-adventure.cjs
 node tests/ui-approved-map.cjs
 ```
 
-Las pruebas UI locales requieren Playwright y Chromium; `CHROMIUM_EXECUTABLE` y `CODEX_PRIMARY_RUNTIME_NODE_MODULES` permiten indicar las herramientas. Esas pruebas usan bases temporales que se eliminan al terminar. La verificación pública deja una cuenta técnica privada identificada en `docs/PRODUCTION-ACTIVATION.md`; no es una persona ni un colegio real. Consulte también `docs/VALIDATION.md` y `docs/RELEASE-0.3.1.md`.
+Las pruebas UI locales requieren Playwright y Chromium; `CHROMIUM_EXECUTABLE` y `CODEX_PRIMARY_RUNTIME_NODE_MODULES` permiten indicar las herramientas. Esas pruebas usan bases temporales que se eliminan al terminar. La verificación pública deja una cuenta técnica privada identificada en `docs/PRODUCTION-ACTIVATION.md`; no es una persona ni un colegio real. Consulte también `docs/VALIDATION.md` y `docs/RELEASE-0.3.1.md` y `docs/RELEASE-0.3.2.md`.
 
 ## Referencias técnicas
 
