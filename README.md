@@ -41,11 +41,13 @@ Se implementó un cargador de personajes GLB con animaciones idle/walk/greet/exp
 
 ## Despliegue y accesos pendientes
 
-La versión 0.3.1 está publicada en https://liam-explorador-mobile.onrender.com desde el 8 de octubre de 2026. El código está en `main` del repositorio indicado arriba. GitHub ya permite publicar; ese bloqueo quedó resuelto. El servicio gratuito `liam-explorador-mobile` es independiente de los servicios antiguos con nombres parecidos.
+La versión 0.3.2 está publicada en https://liam-explorador-mobile.onrender.com desde el 9 de octubre de 2026 UTC. El código está en `main` del repositorio indicado arriba. GitHub ya permite publicar; ese bloqueo quedó resuelto. El servicio gratuito `liam-explorador-mobile` es independiente de los servicios antiguos con nombres parecidos.
 
 El registro y la persistencia quedaron activados el 8 de octubre de 2026, después de autorizar el usuario una base exclusiva. `/api/health` devuelve 200 y `database: true`. PostgreSQL 17 usa el plan `0.1c-256mb`, 1 GB, región Virginia y conexión interna; el crecimiento automático y las conexiones externas permanecen desactivados. El costo base estimado autorizado fue de US$6,30 mensuales antes de impuestos y consumos adicionales. `DATABASE_URL`, `APP_ORIGIN` y una clave administrativa aleatoria están configuradas solo en Render.
 
 Se verificaron en el servidor HTTPS el registro con datos ficticios, ID único, estrellas, desbloqueo de nivel, reintento sin duplicación, PIN, premio, avatar y conservación del progreso tras cerrar e iniciar sesión. El formulario público ya permite crear cuentas. Los colegios se incorporan mediante solicitud y aprobación; no se inventó un catálogo de instituciones reales. Véase `docs/PRODUCTION-ACTIVATION.md`.
+
+Web Push está habilitado en el servidor con claves VAPID propias de Liam. Su uso exige una cuenta, permiso del navegador y autorización del adulto; la entrega debe comprobarse en un teléfono compatible. El servidor también reconoce el origen nativo `https://localhost` para la futura compilación Android. Correo e IA siguen desactivados hasta recibir sus credenciales.
 
 1. Configurar `MAIL_PROVIDER=resend`, `RESEND_API_KEY` y un `MAIL_FROM` verificado para activar correo por HTTPS. Configurar `OPENAI_API_KEY` para activar el refuerzo fotográfico. Las claves permanecen en Render. Véase `docs/RELEASE-0.3.2.md`.
 2. Incorporar los colegios reales y verificar docentes. La autorización de un profesor requiere confirmar su correo, por lo que ese flujo sigue pendiente del proveedor de correo.

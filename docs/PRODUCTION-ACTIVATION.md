@@ -40,3 +40,15 @@ La prueba dejó únicamente el perfil técnico privado `EX-A42610EBCE`, con nomb
 Esta activación acredita registro y persistencia; no certifica la aplicación al 100 %. Faltan correo real (incluida recuperación y confirmación docente), IA y evaluación de sus preguntas, notificaciones, catálogo real de colegios, 3D y animaciones finales, APK firmado y pruebas en dispositivos físicos. El chat escolar requiere los grupos y docentes autorizados; la conexión de la base no sustituye la confirmación de correo ni esas autorizaciones.
 
 No se efectuaron pruebas de carga masiva, recuperación de backups ni reinicio forzado del servicio. La persistencia se comprobó mediante cierre de sesión y una sesión nueva contra la base remota.
+
+## Continuación 0.3.2 · 9 de octubre de 2026 UTC
+
+- Código funcional `e27cbaba996e9eb023ce4b5ff04c484e91857534`; primer despliegue `dep-db459hjtqb8s73e4if20`, activo a las 02:43:52 UTC.
+- `/api/health`: 200, versión 0.3.2, base conectada.
+- `/api/config`: `push:true`, `ai:false`, `email:false`. Claves VAPID generadas para este servicio y conservadas solamente en Render; no se reutilizan credenciales de otros proyectos.
+- `/api/push/config` sin sesión: 401. Preflight Android: 204, permitido exclusivamente para el origen nativo configurado `https://localhost`.
+- Registro de errores de Render desde la activación hasta las 02:45 UTC: sin resultados.
+- Diez grupos de pruebas locales del servidor aprobados. No se enviaron notificaciones ni correos a personas reales, ni se crearon nuevos alumnos en producción durante esta revisión.
+- La revisión del navegador detectó archivos públicos anteriores retenidos por el service worker. Se preparó una corrección para activar la caché nueva completa sin recargar automáticamente las pantallas abiertas.
+
+La activación de Web Push acredita configuración del servidor, no entrega en dispositivos físicos. Los pendientes de correo, IA, catálogo real, 3D, Android firmado y pruebas físicas se detallan en `RELEASE-0.3.2.md`.

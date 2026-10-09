@@ -12,6 +12,7 @@ Se conservan la portada, el mapa aprobado, los personajes ilustrados, los sonido
 - Correo: transporte HTTPS con Resend, compatible con el servicio web gratuito de Render; SMTP sigue disponible para entornos que lo admitan. Solo se habilita con proveedor, credencial, remitente y origen configurados. Los fallos del proveedor no exponen claves ni contenido de correos.
 - IA: tratamiento de interrupciones, respuestas incompletas, rechazos, salida inválida y tiempos de espera. Se validan entre tres y ocho preguntas de cuatro opciones; la foto ilegible no produce una actividad inventada. El adulto sigue revisando el borrador antes de publicar. Se mantiene `store:false` y el modelo existente.
 - Android: versión 0.3.2, código de versión 3, recursos sincronizados con `https://liam-explorador-mobile.onrender.com`. La copia web no incluye configuración nativa. No se generó APK/AAB ni se aceptaron licencias.
+- Actualización de la PWA: activa la caché nueva después de descargar todos sus recursos públicos. No recarga un reto abierto ni borra respuestas pendientes; al volver a abrir o recargar se usan los archivos actuales. La revisión pública detectó y corrigió la espera indefinida que mantenía la interfaz anterior cuando había otras pestañas abiertas.
 
 ## Verificación de código
 
