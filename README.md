@@ -43,11 +43,13 @@ Se implementó un cargador de personajes GLB con animaciones idle/walk/greet/exp
 
 La versión 0.3.1 está publicada en https://liam-explorador-mobile.onrender.com desde el 8 de octubre de 2026. El código está en `main` del repositorio indicado arriba. GitHub ya permite publicar; ese bloqueo quedó resuelto. El servicio gratuito `liam-explorador-mobile` es independiente de los servicios antiguos con nombres parecidos.
 
-La publicación actual permite explorar el avance y muestra un aviso de registro no disponible. La comprobación HTTPS de `/`, `/api/health` y `/api/config` devuelve 200; la salud declara `database: false`. Esto confirma que el servidor funciona, no que las cuentas estén habilitadas.
+El registro y la persistencia quedaron activados el 8 de octubre de 2026, después de autorizar el usuario una base exclusiva. `/api/health` devuelve 200 y `database: true`. PostgreSQL 17 usa el plan `0.1c-256mb`, 1 GB, región Virginia y conexión interna; el crecimiento automático y las conexiones externas permanecen desactivados. El costo base estimado autorizado fue de US$6,30 mensuales antes de impuestos y consumos adicionales. `DATABASE_URL`, `APP_ORIGIN` y una clave administrativa aleatoria están configuradas solo en Render.
 
-1. Proveer PostgreSQL exclusivo de Liam. No hay una base dedicada existente; Render rechazó anteriormente otra base gratuita por el límite de una activa. No se reutiliza ni se modifica ninguna base de otro proyecto y no se contrató una base de pago.
-2. Configurar `DATABASE_URL`, `APP_ORIGIN`, `ADMIN_KEY`; correo, `OPENAI_API_KEY` para IA y VAPID para notificaciones cuando corresponda. Ninguna credencial se incluye en el frontend.
-3. Verificar cuentas de prueba en el servidor HTTPS y un dispositivo físico antes de habilitar familias reales.
+Se verificaron en el servidor HTTPS el registro con datos ficticios, ID único, estrellas, desbloqueo de nivel, reintento sin duplicación, PIN, premio, avatar y conservación del progreso tras cerrar e iniciar sesión. El formulario público ya permite crear cuentas. Los colegios se incorporan mediante solicitud y aprobación; no se inventó un catálogo de instituciones reales. Véase `docs/PRODUCTION-ACTIVATION.md`.
+
+1. Activar correo, `OPENAI_API_KEY` para IA y VAPID para notificaciones cuando corresponda. El servicio web gratuito requiere revisar un transporte de correo compatible antes de activar SMTP.
+2. Incorporar los colegios reales y verificar docentes. La autorización de un profesor requiere confirmar su correo, por lo que ese flujo sigue pendiente del proveedor de correo.
+3. Verificar la experiencia en teléfonos físicos y completar los recursos 3D y la distribución móvil.
 
 `render.yaml` conserva la configuración prevista para activar esos servicios. La instalación de dependencias incluye las herramientas de compilación incluso con `NODE_ENV=production`. Los componentes con correo, IA y push están programados pero no activados con proveedores reales. Las pruebas previas usan correo y respuestas IA de prueba sin envíos externos. El despliegue web no equivale a un APK ni al escenario 3D final.
 
@@ -63,7 +65,7 @@ node tests/ui-adventure.cjs
 node tests/ui-approved-map.cjs
 ```
 
-Las pruebas UI requieren Playwright y Chromium; `CHROMIUM_EXECUTABLE` y `CODEX_PRIMARY_RUNTIME_NODE_MODULES` permiten indicar las herramientas. Los datos de prueba son ficticios y se eliminan al terminar. Consulte `docs/VALIDATION.md` y `docs/RELEASE-0.3.1.md`.
+Las pruebas UI locales requieren Playwright y Chromium; `CHROMIUM_EXECUTABLE` y `CODEX_PRIMARY_RUNTIME_NODE_MODULES` permiten indicar las herramientas. Esas pruebas usan bases temporales que se eliminan al terminar. La verificación pública deja una cuenta técnica privada identificada en `docs/PRODUCTION-ACTIVATION.md`; no es una persona ni un colegio real. Consulte también `docs/VALIDATION.md` y `docs/RELEASE-0.3.1.md`.
 
 ## Referencias técnicas
 
