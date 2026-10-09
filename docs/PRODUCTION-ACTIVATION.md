@@ -49,6 +49,9 @@ No se efectuaron pruebas de carga masiva, recuperación de backups ni reinicio f
 - `/api/push/config` sin sesión: 401. Preflight Android: 204, permitido exclusivamente para el origen nativo configurado `https://localhost`.
 - Registro de errores de Render desde la activación hasta las 02:45 UTC: sin resultados.
 - Diez grupos de pruebas locales del servidor aprobados. No se enviaron notificaciones ni correos a personas reales, ni se crearon nuevos alumnos en producción durante esta revisión.
-- La revisión del navegador detectó archivos públicos anteriores retenidos por el service worker. Se preparó una corrección para activar la caché nueva completa sin recargar automáticamente las pantallas abiertas.
+- La revisión del navegador detectó archivos públicos anteriores retenidos por el service worker. Se corrigió activando la caché nueva completa sin recargar automáticamente las pantallas abiertas.
+- Corrección desplegada: `b61ce57b05d334ceb0ec1f9d41a753d5c3b7fb82`, despliegue `dep-db45b6jtqb8s73e4of30`, activo a las 02:47:25 UTC. El archivo `/sw.js` público coincide byte por byte con el guardado en git; salud y configuración siguen correctas.
+- Se seleccionó `MAIL_PROVIDER=resend` en Render. La ausencia de credencial y remitente mantiene `email:false`; no se envió correo ni se contrató una cuenta de proveedor.
+- En el navegador público se recorrieron portada, aventura, perfil y «En tu teléfono» en vista previa. La nueva sección de notificaciones aparece, la cabecera mide 44 px y no hay desbordamiento horizontal en el contenedor de 480 px. La captura conserva la indicación «VISTA PREVIA · sin datos reales». No se presenta como prueba de entrega de una notificación ni como auditoría de todos los tamaños de móvil.
 
 La activación de Web Push acredita configuración del servidor, no entrega en dispositivos físicos. Los pendientes de correo, IA, catálogo real, 3D, Android firmado y pruebas físicas se detallan en `RELEASE-0.3.2.md`.

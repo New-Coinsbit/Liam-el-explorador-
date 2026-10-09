@@ -21,6 +21,7 @@ Se conservan la portada, el mapa aprobado, los personajes ilustrados, los sonido
 - `LIAM_API_ORIGIN=https://liam-explorador-mobile.onrender.com npm run android:prepare`: correcto. Se verificó que la configuración generada apunta al servidor real y no al modo de vista previa.
 - `git diff --check`: correcto. Sin cambios en `public/assets/`.
 - Se agregó `tests/ui-mobile.cjs` para los estados de notificación. Los recorridos UI automatizados no pudieron ejecutarse en este entorno: el ejecutable local estaba vacío y la descarga de Chromium llegó truncada. No se contabilizan como aprobados. La comprobación visual del despliegue se realiza por separado en el navegador.
+- Comprobación visual pública realizada: portada, aventura, perfil y controles móviles en vista previa. Se confirmó la nueva sección de notificaciones, cabecera de 44 px y ausencia de desbordamiento horizontal en el contenedor de 480 px. La versión pública, la base activa, el estado Web Push y la corrección de caché se verificaron también mediante solicitudes HTTPS.
 
 Las pruebas usan datos ficticios y transportes simulados. No envían correos, mensajes ni notificaciones a personas reales. No demuestran entrega en un teléfono físico ni calidad pedagógica de un análisis real de IA.
 
