@@ -16,4 +16,18 @@ Pruebas automáticas del servidor: lote de 20 que supera el límite anterior de 
 
 Prueba de interfaz con Chromium y cámara simulada: cámara directa sin selector, galería múltiple, acumulación, límite 20/21, quitar/añadir, formulario conservado, envío de 20 imágenes, conservación tras fallo del servidor, imagen corrupta, cancelación y apagado de cámara, navegación y anchos 320/393/480.
 
-Compilación Android y prueba en teléfono físico: registrar resultados después de generar el APK. La cámara simulada del navegador no sustituye la prueba del APK en el teléfono del usuario.
+Compilación Android completada y firma APK v2 verificada en GitHub Actions: https://github.com/New-Coinsbit/Liam-el-explorador-/actions/runs/38161560664
+
+- Commit publicado y empaquetado: `ee547fc2f4db749bec30621d72ad7aa9d7e73fd4`.
+- Archivo: `Liam-El-Explorador-0.3.3-prueba.apk`; 23.345.243 bytes; Android 7/API 24 o superior.
+- SHA-256: `40b320cc7da7405c7a6d2e1485fa6136c46449a07c8ca6f9d986b53c777ea513`.
+- Integridad del ZIP/APK comprobada, origen de producción y `preview:false` verificados; módulo de fotos idéntico al código probado. Once pruebas del servidor aprobadas y prueba de interfaz específica aprobada.
+- La firma de depuración es distinta a la del APK 0.3.2: Android requiere desinstalar la prueba anterior antes de instalar esta. Las credenciales y los datos ya guardados en el servidor se conservan; las selecciones y respuestas locales no enviadas se pierden al desinstalar.
+- La apertura de cámara del APK sigue pendiente de prueba en un teléfono físico. La cámara simulada del navegador no sustituye esa comprobación.
+
+## Publicación
+
+- Autorización expresa del usuario para publicar en `main`, actualizar Render y generar el APK 0.3.3.
+- Render: servicio `liam-explorador-mobile` (`srv-db42h2k9v7es738si9hg`), despliegue `dep-db5srlrbc2fs73a0qmkg` del commit empaquetado; estado `live`, finalizado el 11 de octubre de 2026 a las 17:57:15 UTC. No se encontraron errores en los registros consultados desde el inicio del despliegue.
+- Verificación de la interfaz pública tras actualizar la caché: «0 de 20 imágenes», «Tomar foto», «Elegir imágenes» con selector múltiple y texto para combinar cámara y galería. Las pestañas web ya abiertas requieren recarga después de instalarse la nueva caché; no se interrumpe una actividad en curso.
+- La pantalla publicada confirma que la generación por IA sigue sin estar disponible. Esta entrega corrige cámara y carga múltiple; no configura credenciales del proveedor.
