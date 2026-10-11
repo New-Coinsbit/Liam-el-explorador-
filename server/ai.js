@@ -1,5 +1,5 @@
 import {validateQuestions} from './security.js';
-export async function generateQuestions(image,subject,grade,goal='Repasar la clase',focus=[],{request=globalThis.fetch,env=process.env}={}){
+export async function generateQuestions(image,subject,grade,goal='Repasar la clase',focus=[],{request=globalThis.fetch,env=process.env,log=entry=>console.warn(JSON.stringify(entry))}={}){
  const error=(status,message)=>Object.assign(new Error(message),{status});
  if(!env.OPENAI_API_KEY)throw error(503,'El refuerzo con IA todavía no está activado.');
  const images=Array.isArray(image)?image:[image];
@@ -12,7 +12,15 @@ export async function generateQuestions(image,subject,grade,goal='Repasar la cla
  input:[{role:'user',content:[{type:'input_text',text:`Materia: ${subject}. Grado: ${grade}. Objetivo: ${goal}. ${goal==='Preparar evaluación'?'Combina comprensión y aplicación, con dificultad gradual.':goal==='Reforzar errores'?'Refuerza especialmente estos conceptos si aparecen en las imágenes: '+focus.join('; '):'Explica los conceptos básicos de la clase con ejemplos cercanos.'}`},...images.map(image_url=>({type:'input_image',image_url}))]}],
  text:{format:{type:'json_schema',name:'school_questions',strict:true,schema:{type:'object',additionalProperties:false,required:['questions'],properties:{questions:{type:'array',maxItems:8,items:{type:'object',additionalProperties:false,required:['prompt','options','answer','explanation'],properties:{prompt:{type:'string'},options:{type:'array',minItems:4,maxItems:4,items:{type:'string'}},answer:{type:'integer',minimum:0,maximum:3},explanation:{type:'string'}}}}}}}}
  })});
- if(!response.ok)throw error(503,'El refuerzo con IA no está disponible en este momento. Inténtalo más tarde.');
+ if(!response.ok){
+  let upstream;try{upstream=await response.json();}catch{}
+  const allowed=['insufficient_quota','invalid_api_key','model_not_found','permission_denied','rate_limit_exceeded','billing_hard_limit_reached'];
+  const code=allowed.includes(upstream?.error?.code)?upstream.error.code:'unclassified';
+  const status=Number.isInteger(response.status)&&response.status>=100&&response.status<=599?response.status:null;
+  // Never log provider messages, headers, credentials, images or school content.
+  log({event:'ai_provider_failure',status,code});
+  throw error(503,'El refuerzo con IA no está disponible en este momento. Inténtalo más tarde.');
+ }
  result=await response.json();
  }catch(e){
   if(['TimeoutError','AbortError'].includes(e.name))throw error(504,'El análisis tardó demasiado. Tus imágenes siguen en el formulario; vuelve a intentarlo.');
