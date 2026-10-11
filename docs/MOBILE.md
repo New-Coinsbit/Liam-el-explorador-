@@ -29,8 +29,22 @@ node scripts/prepare-android.js --preview
 
 Esta variante dice «vista previa» y no activa cuentas. No usarla como una versión publicada con datos reales.
 
-La revisión 0.3.1 obtuvo y verificó Gradle 8.14.3, JDK 21 y plataforma SDK 36 con herramientas 36 en un directorio aislado. Gradle ya arrancó y configuró los proyectos. La compilación se detuvo al requerir Android SDK Build-Tools 35.0.0 con una licencia no aceptada. No se aceptó el acuerdo, ni se generó un APK/AAB. El responsable debe revisar/aceptar la licencia e instalar el componente con Android Studio SDK Manager antes de ejecutar `./gradlew assembleDebug`.
+La compilación local de 0.3.1 se detuvo al requerir Android SDK Build-Tools 35.0.0 con una licencia no aceptada. El 11 de octubre de 2026 se generó correctamente el APK 0.3.2 en GitHub Actions usando las herramientas ya instaladas del ejecutor Ubuntu 24.04: JDK 21, plataforma SDK 36 y Build-Tools 35.0.0. El flujo no ejecuta aceptación de licencias ni instalación automática del SDK (`android.builder.sdkDownload=false`).
 
-La cámara/galería utiliza el selector de archivos del sistema; su funcionamiento, cookies de sesión y permisos deben probarse en Android físico. Web Push se verifica aparte en la PWA; no se implementó Firebase nativo. La versión nativa de prueba informa esta limitación y no ofrece un botón de instalación del navegador cuando ya está instalada. El proyecto 0.3.2 ya se sincronizó con https://liam-explorador-mobile.onrender.com. Falta aceptar la licencia indicada, compilar, probar en un teléfono físico y aportar una clave propia de firma para distribución.
+La cámara/galería utiliza el selector de archivos del sistema; su funcionamiento, cookies de sesión y permisos deben probarse en Android físico. Web Push se verifica aparte en la PWA; no se implementó Firebase nativo. La versión nativa de prueba informa esta limitación y no ofrece un botón de instalación del navegador cuando ya está instalada. El APK 0.3.2 está conectado a https://liam-explorador-mobile.onrender.com, con `preview:false`. Falta probarlo en un teléfono físico y aportar una clave propia de firma para distribución.
+
+### APK de prueba generado
+
+- Archivo: `Liam-El-Explorador-0.3.2-prueba.apk` (23.338.573 bytes).
+- Android 7.0/API 24 o superior; paquete `com.newcoinsbit.liamelexplorador`, versión 0.3.2/código 3.
+- Compilación: https://github.com/New-Coinsbit/Liam-el-explorador-/actions/runs/38158833931
+- Commit: `b6657cb9d6910c8ea5780e13bef20474ed723582`.
+- SHA-256: `3639daa086ab7f9852acaa0054a4b1145f89ee9bf820700e2df5f69fa630f29d`.
+- Firma de depuración RSA de 2048 bits verificada con `apksigner`; esquema APK v2 válido. No es una firma para publicar en Google Play.
+- Se verificaron integridad del ZIP/APK, identidad, versión, origen HTTPS y coincidencia de las ilustraciones aprobadas con el repositorio. No se realizó una prueba en un teléfono físico.
+
+`.github/workflows/android-apk.yml` permite generar nuevos APK desde Actions y cuando cambian los archivos de Android o los recursos de la aplicación. El artefacto se conserva 14 días en Actions. La clave de depuración se genera en cada ejecutor temporal: futuros APK de prueba pueden requerir desinstalar el anterior. Antes de distribuir actualizaciones estables debe configurarse una clave de firma duradera bajo control del propietario.
+
+Para instalar esta prueba: descargar el APK en Android, abrirlo y, si el sistema lo solicita, permitir la instalación desde el navegador o gestor de archivos utilizado. Registro, comunidad y actividades nuevas requieren internet. Esta entrega empaqueta el estado actual 0.3.2; no completa las integraciones de IA/correo ni los modelos 3D pendientes.
 
 La versión iOS no está generada.
