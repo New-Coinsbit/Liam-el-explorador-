@@ -1,0 +1,74 @@
+name: APK Android de Liam
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/android-apk.yml'
+      - 'android/**'
+      - 'public/**'
+      - 'scripts/build.js'
+      - 'scripts/prepare-android.js'
+      - 'capacitor.config.json'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: liam-android-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Comprobar herramientas preinstaladas
+        shell: bash
+        run: |
+          test -x "$JAVA_HOME_21_X64/bin/java"
+          test -f "$ANDROID_HOME/platforms/android-36/android.jar"
+          test -x "$ANDROID_HOME/build-tools/35.0.0/apksigner"
+          echo "JAVA_HOME=$JAVA_HOME_21_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
+      - name: Preparar aplicación conectada al servidor de Liam
+        env:
+          LIAM_API_ORIGIN: https://liam-explorador-mobile.onrender.com
+        run: |
+          npm ci --include=dev
+          npm run build
+          npm run android:prepare
+      - name: Compilar APK de prueba
+        working-directory: android
+        run: ./gradlew --no-daemon -Pandroid.builder.sdkDownload=false assembleDebug
+      - name: Verificar y empaquetar
+        shell: bash
+        run: |
+          mkdir -p apk-delivery
+          liam_version=$(node -p 'require("./package.json").version')
+          liam_apk="apk-delivery/Liam-El-Explorador-${liam_version}-prueba.apk"
+          cp android/app/build/outputs/apk/debug/app-debug.apk "$liam_apk"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$liam_apk" > apk-delivery/firma.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$liam_apk" > apk-delivery/aplicacion.txt
+          grep -F "name='com.newcoinsbit.liamelexplorador'" apk-delivery/aplicacion.txt
+          grep -F "versionName='$liam_version'" apk-delivery/aplicacion.txt
+          unzip -p "$liam_apk" assets/public/native-config.js | grep -F '"apiOrigin":"https://liam-explorador-mobile.onrender.com","preview":false'
+          sha256sum "$liam_apk" > apk-delivery/SHA256SUMS.txt
+          printf '%s\n' "$GITHUB_SHA" > apk-delivery/commit.txt
+      - name: Guardar APK verificado
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: Liam-El-Explorador-Android-prueba
+          path: apk-delivery/
+          if-no-files-found: error
+          retention-days: 14
