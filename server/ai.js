@@ -14,7 +14,7 @@ export async function generateQuestions(image,subject,grade,goal='Repasar la cla
  })});
  if(!response.ok){
   let upstream;try{upstream=await response.json();}catch{}
-  const allowed=['insufficient_quota','invalid_api_key','model_not_found','permission_denied','rate_limit_exceeded','billing_hard_limit_reached'];
+  const allowed=['insufficient_quota','invalid_api_key','model_not_found','permission_denied','rate_limit_exceeded','billing_hard_limit_reached','credit_balance_exhausted','slow_down','organization_spend_limit_exceeded','project_spend_limit_exceeded','organization_usage_limit_exceeded'];
   const code=allowed.includes(upstream?.error?.code)?upstream.error.code:'unclassified';
   const status=Number.isInteger(response.status)&&response.status>=100&&response.status<=599?response.status:null;
   // Never log provider messages, headers, credentials, images or school content.

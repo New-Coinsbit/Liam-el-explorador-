@@ -42,10 +42,10 @@ test('AI: structured photo results, refusal, incomplete, timeout and malformed o
  await assert.rejects(run(async()=>{throw new Error('secret upstream text');}),e=>e.status===503&&!/secret/.test(e.message));
  await assert.rejects(run(async()=>({ok:false,status:401})),e=>e.status===503);
  const diagnostics=[];
- for(const code of ['insufficient_quota','invalid_api_key','SECRET-PROVIDER-MESSAGE']){
+ for(const code of ['insufficient_quota','invalid_api_key','credit_balance_exhausted','SECRET-PROVIDER-MESSAGE']){
   await assert.rejects(generateQuestions('data:image/png;base64,test','Matemáticas',3,'Repasar la clase',[],{env,log:entry=>diagnostics.push(entry),request:async()=>({ok:false,status:429,json:async()=>({error:{code,message:'PRIVATE KEY AND IMAGE CONTENT'}})})}),e=>e.status===503&&!/PRIVATE|SECRET/.test(e.message));
  }
- assert.deepEqual(diagnostics,[{event:'ai_provider_failure',status:429,code:'insufficient_quota'},{event:'ai_provider_failure',status:429,code:'invalid_api_key'},{event:'ai_provider_failure',status:429,code:'unclassified'}]);
+ assert.deepEqual(diagnostics,[{event:'ai_provider_failure',status:429,code:'insufficient_quota'},{event:'ai_provider_failure',status:429,code:'invalid_api_key'},{event:'ai_provider_failure',status:429,code:'credit_balance_exhausted'},{event:'ai_provider_failure',status:429,code:'unclassified'}]);
  await assert.rejects(generateQuestions('', '', 0, '', [],{env:{},request:()=>{throw new Error('must not call');}}),e=>e.status===503);
 });
 
