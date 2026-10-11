@@ -38,7 +38,7 @@ test('AI: structured photo results, refusal, incomplete, timeout and malformed o
   [{status:'failed',error:{message:'PRIVATE'}},503,/completar/]
  ];
  for(const [result,status,pattern] of cases)await assert.rejects(run(async()=>({ok:true,json:async()=>result})),e=>e.status===status&&pattern.test(e.message));
- await assert.rejects(run(async()=>{throw Object.assign(new Error('timeout'),{name:'TimeoutError'});}),e=>e.status===504&&/foto sigue/.test(e.message));
+ await assert.rejects(run(async()=>{throw Object.assign(new Error('timeout'),{name:'TimeoutError'});}),e=>e.status===504&&/imágenes siguen/.test(e.message));
  await assert.rejects(run(async()=>{throw new Error('secret upstream text');}),e=>e.status===503&&!/secret/.test(e.message));
  await assert.rejects(run(async()=>({ok:false,status:401})),e=>e.status===503);
  await assert.rejects(generateQuestions('', '', 0, '', [],{env:{},request:()=>{throw new Error('must not call');}}),e=>e.status===503);

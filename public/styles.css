@@ -178,3 +178,6 @@ html[data-motion=off] .companion-sprite{animation:none}html[data-motion=off] .co
 .editor-question .field input[type=number]{width:100%}
 .subject-summaries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .subject-summaries .group-card{margin:0;padding:9px}.subject-summaries h3{font-size:13px}.subject-summaries p{font-size:12px}
+
+/* School activity photo selection */
+.school-photos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.school-photos>p{grid-column:1/-1;padding:24px 8px;border:2px dashed var(--line);border-radius:15px}.school-photos figure{margin:0;padding:7px;border:1px solid var(--line);border-radius:12px;background:#fff6de}.school-photos img{display:block;width:100%;height:120px;object-fit:contain;border-radius:8px}.school-photos figcaption{font-size:13px;text-align:center;margin:6px}.school-photos button{width:100%;min-height:40px;font-size:14px}.school-camera{width:min(94vw,460px);max-height:95svh;overflow:auto;border:2px solid var(--gold);border-radius:20px;background:var(--cream);color:var(--pine);padding:18px}.school-camera::backdrop{background:#00160dcc}.school-camera video{display:block;width:100%;max-height:55svh;background:#08271e;border-radius:12px}.school-camera p{margin:12px 0}.school-camera h2{font-size:21px}

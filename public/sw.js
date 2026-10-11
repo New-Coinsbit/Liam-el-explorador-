@@ -1,6 +1,6 @@
 // Versioned public assets only. Authenticated API responses and user photos are never cached.
-const CACHE='liam-public-0.3.2';
-const SHELL=['/','/styles.css','/icon.svg','/manifest.webmanifest','/js/app.js','/js/components.js','/js/api.js','/js/selectors.js','/js/ambience.js','/js/adventure-map.js','/js/world.js','/js/platform.js','/js/activity-editor.js','/js/question-input.js','/js/mobile.js','/js/rigged-companions.js','/vendor/three.module.js','/vendor/three.core.js','/assets/welcome-art.webp','/assets/adventure-approved.webp','/assets/avatar-reference.webp','/assets/companions-atlas.webp'];
+const CACHE='liam-public-0.3.3';
+const SHELL=['/','/styles.css','/icon.svg','/manifest.webmanifest','/js/app.js','/js/components.js','/js/api.js','/js/reinforcement-photos.js','/js/selectors.js','/js/ambience.js','/js/adventure-map.js','/js/world.js','/js/platform.js','/js/activity-editor.js','/js/question-input.js','/js/mobile.js','/js/rigged-companions.js','/vendor/three.module.js','/vendor/three.core.js','/assets/welcome-art.webp','/assets/adventure-approved.webp','/assets/avatar-reference.webp','/assets/companions-atlas.webp'];
 // Activate only after the complete public shell is ready. Existing pages are not reloaded,
 // so an open exercise keeps its answers; the next reload uses the current public assets.
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));

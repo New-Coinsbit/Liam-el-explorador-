@@ -1,7 +1,8 @@
 import {randomUUID} from 'node:crypto';
-import {clean,imageValid,rating} from './security.js';
+import {clean,rating} from './security.js';
 import {validateQuestions,publicQuestion,validAnswer,isCorrect} from './questions.js';
 import {generateQuestions} from './ai.js';
+import {reinforcementImages} from './reinforcement-images.js';
 export function learningRoutes(ctx){
  const {app,db,row,many,auth,adult,limit,fail,profile}=ctx;
  const accessSql='(a.owner_id IS NULL OR a.owner_id=$1 OR a.id IN (SELECT sa.activity_id FROM shared_activities sa JOIN memberships m ON m.group_id=sa.group_id WHERE m.user_id=$1))';
@@ -54,11 +55,11 @@ export function learningRoutes(ctx){
   });res.json({...result,profile:await profile(req.user,req.session)});
  });
  app.post('/api/reinforcement',auth,adult,limit('ai',6,3600000),async(req,res)=>{
-  if(!imageValid(req.body.image))fail(400,'Sube una foto JPG, PNG o WebP de hasta 3 MB.');
+  const images=reinforcementImages(req.body);
   const subject=clean(req.body.subject,60),goal=clean(req.body.goal,80)||'Repasar la clase',grade=Number(req.user.grade??req.body.grade);
   if(!['Preparar evaluación','Repasar la clase','Reforzar errores'].includes(goal)||!Number.isInteger(grade)||grade<0||grade>11)fail(400,'Selecciona un objetivo y grado válidos.');
   let focus=[];if(goal==='Reforzar errores')focus=(await many('SELECT h.result FROM attempt_history h JOIN activities a ON a.id=h.activity_id WHERE h.user_id=$1 AND a.subject=$2 ORDER BY h.created_at DESC LIMIT 3',[req.user.id,subject])).flatMap(h=>h.result.feedback.filter(f=>!f.correct).map(f=>f.explanation)).slice(0,8);
-  const questions=await generateQuestions(req.body.image,subject,grade,goal,focus),id=randomUUID(),title=clean(req.body.title,120)||'Refuerzo escolar';
+  const questions=await generateQuestions(images,subject,grade,goal,focus),id=randomUUID(),title=clean(req.body.title,120)||'Refuerzo escolar';
   await db.query('INSERT INTO activities(id,owner_id,title,subject,questions,grade_min,grade_max,goal) VALUES($1,$2,$3,$4,$5,$6,$6,$7)',[id,req.user.id,title,subject,JSON.stringify(questions),grade,goal]);
   res.status(201).json({id,title,subject,questions,reviewed:false,goal,gradeMin:grade,gradeMax:grade});
  });

@@ -39,7 +39,7 @@ test('audit: stable paths, expired parental access, malformed requests and hidde
   assert.equal((await student('/me')).data.parentUnlocked,false);
   const expired=await student('/rewards','POST',{title:'Premio',target:3});assert.equal(expired.status,403);assert.equal(expired.data.code,'PARENT_REQUIRED');
   for(const content of [undefined,'null','[]','{broken']){const r=await fetch(base+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:content});assert.equal(r.status,400);assert.equal(typeof (await r.json()).error,'string');}
-  const huge=await fetch(base+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:'x'.repeat(6*1024*1024)})});assert.equal(huge.status,413);assert.match((await huge.json()).error,/demasiado grande/);
+  const huge=await fetch(base+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:'x'.repeat(6*1024*1024)})});assert.equal(huge.status,413);assert.match((await huge.json()).error,/tamaño permitido/);
   await db.query("UPDATE sessions SET expires_at=now()-interval '1 minute'");assert.equal((await student('/me')).data.code,'SESSION_EXPIRED');
  }finally{await new Promise(r=>server.close(r));await db.close();await rm(dir,{recursive:true,force:true});}
 });
